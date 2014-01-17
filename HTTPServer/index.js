@@ -2,9 +2,9 @@
 
 function HTTPServer(server, port, host){
 
-	var MediaType    = require("./MediaType");
+	var MediaType    = require("../MediaType");
 
-	var HTTPMethods  = require("./HTTPMethods");
+	var HTTPMethods  = require("../HTTPMethods");
 
 	var defaultListeners = server.getListenerBinder();
 
@@ -18,21 +18,21 @@ function HTTPServer(server, port, host){
 
     		var httpCode = 401;
 
-    		var body = error.message;
+    		var body = typeof error === "string" ? error : error.message;
 
-			var errorLs = Object.keys(errorListeners).filter(function(errorListener){
-	    		return errorListener[options.type] && errorListener[options.type][options.media] || errorListener['*'] && (errorListener['*']['*'] || errorListener['*'][options.media]);
-	    	});
+			// var errorLs = Object.keys(errorListeners).filter(function(errorListener){
+	  //   		return errorListener[options.type] && errorListener[options.type][options.media] || errorListener['*'] && (errorListener['*']['*'] || errorListener['*'][options.media]);
+	  //   	});
 
-	    	errorLs.forEach(function(errorL){
-	    		var responseModifier = errorL(error);
-	    		for(var headerKey in responseModifier.headers){
-	    			var header = responseModifier.headers[headerKey];
-		    		response.setHeader(header.name, header.value);
-	    		}
-	    		httpCode 	= responseModifier.code || httpCode;
-	    		body 		= responseModifier.body || body;
-	    	});
+	  //   	errorLs.forEach(function(errorL){
+	  //   		var responseModifier = errorL(error);
+	  //   		for(var headerKey in responseModifier.headers){
+	  //   			var header = responseModifier.headers[headerKey];
+		 //    		response.setHeader(header.name, header.value);
+	  //   		}
+	  //   		httpCode 	= responseModifier.code || httpCode;
+	  //   		body 		= responseModifier.body || body;
+	  //   	});
 
 	    	response.send(httpCode, body);
 
@@ -70,7 +70,7 @@ function HTTPServer(server, port, host){
 	this.addHTTPListerner = function(url, listener, options){
 		var params = getValidOptions(listener, options);
 
-		defaultListeners[HTTPMethods[params[1].type]][params[1].media](url, params[0], params[1], bindCallbacks){
+		defaultListeners[HTTPMethods[params[1].type]][params[1].media](url, params[0], params[1], bindCallbacks);
 	};
 
 	this.addErrorListerner = function(url, listener, options){
