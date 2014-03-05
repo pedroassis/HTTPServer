@@ -1,12 +1,27 @@
 
 
+var MediaType    = require("./MediaType");
+
+var HTTPMethods  = require("./HTTPMethods");
+
+var CRUDBinder   = require("./CRUDBinder");
+
+var ExpressAdapter   = require("./ExpressAdapter");
+
+var ExpressAdapter   = require("./ExpressAdapter");
+
+
+module.exports.HTTPServer       = HTTPServer;
+module.exports.HTTPMethods      = HTTPMethods;
+module.exports.CRUDBinder  		= CRUDBinder;
+module.exports.MediaType   		= MediaType;
+module.exports.ExpressAdapter   = ExpressAdapter;
+
 function HTTPServer(server, port, host){
 
-	var MediaType    = require("./MediaType");
-
-	var HTTPMethods  = require("./HTTPMethods");
-
 	var defaultListeners = server.getListenerBinder();
+
+	var defaultBinder = new CRUDBinder();
 
 	function bindCallbacks(promise, options, request, response){
 
@@ -18,21 +33,21 @@ function HTTPServer(server, port, host){
 
     		var httpCode = 401;
 
-    		var body = error.message;
+    		var body = typeof error === "string" ? error : error.message;
 
-			var errorLs = Object.keys(errorListeners).filter(function(errorListener){
-	    		return errorListener[options.type] && errorListener[options.type][options.media] || errorListener['*'] && (errorListener['*']['*'] || errorListener['*'][options.media]);
-	    	});
+			// var errorLs = Object.keys(errorListeners).filter(function(errorListener){
+	  //   		return errorListener[options.type] && errorListener[options.type][options.media] || errorListener['*'] && (errorListener['*']['*'] || errorListener['*'][options.media]);
+	  //   	});
 
-	    	errorLs.forEach(function(errorL){
-	    		var responseModifier = errorL(error);
-	    		for(var headerKey in responseModifier.headers){
-	    			var header = responseModifier.headers[headerKey];
-		    		response.setHeader(header.name, header.value);
-	    		}
-	    		httpCode 	= responseModifier.code || httpCode;
-	    		body 		= responseModifier.body || body;
-	    	});
+	  //   	errorLs.forEach(function(errorL){
+	  //   		var responseModifier = errorL(error);
+	  //   		for(var headerKey in responseModifier.headers){
+	  //   			var header = responseModifier.headers[headerKey];
+		 //    		response.setHeader(header.name, header.value);
+	  //   		}
+	  //   		httpCode 	= responseModifier.code || httpCode;
+	  //   		body 		= responseModifier.body || body;
+	  //   	});
 
 	    	response.send(httpCode, body);
 
@@ -70,8 +85,12 @@ function HTTPServer(server, port, host){
 	this.addHTTPListerner = function(url, listener, options){
 		var params = getValidOptions(listener, options);
 
-		defaultListeners[HTTPMethods[params[1].type]][params[1].media](url, params[0], params[1], bindCallbacks){
+		defaultListeners[HTTPMethods[params[1].type]][params[1].media](url, params[0], params[1], bindCallbacks);
 	};
+
+	this.addInterceptor = function(listener){
+		defaultListeners.addInterceptor(listener);
+	}
 
 	this.addErrorListerner = function(url, listener, options){
 		if(options && options.type && !HTTPMethods[options.type]){
@@ -96,11 +115,10 @@ function HTTPServer(server, port, host){
 
 	this.addCRUD = function(object, binder){
 
+		binder = binder ? binder : defaultBinder;
 		binder.bind(object, this.addHTTPListerner.bind(this));
 
 	};
 
 
 }
-
-module.exports = HTTPServer;
