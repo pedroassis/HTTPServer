@@ -8,9 +8,6 @@ var CRUDBinder   = require("./CRUDBinder");
 
 var ExpressAdapter   = require("./ExpressAdapter");
 
-var ExpressAdapter   = require("./ExpressAdapter");
-
-
 module.exports.HTTPServer       = HTTPServer;
 module.exports.HTTPMethods      = HTTPMethods;
 module.exports.CRUDBinder  		= CRUDBinder;
@@ -113,7 +110,7 @@ function HTTPServer(server, port, host){
 	};
 
 
-	this.addCRUD = function(object, binder){
+	this.addCRUD = function(object, binder, mediaType){
 
 		binder = binder ? binder : defaultBinder;
 		binder.bind(object, this.addHTTPListerner.bind(this));
