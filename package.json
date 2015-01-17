@@ -1,6 +1,6 @@
 {
   "name": "HTTPServer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "HTTPServer ==========",
   "main": "index.js",
   "scripts": {
@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/pedroassis/HTTPServer/issues"
   },
-  "homepage": "https://github.com/pedroassis/HTTPServer"
+  "homepage": "https://github.com/pedroassis/HTTPServer",
+  "dependencies": {
+    "express"           : "3.4.8",
+    "q": "^1.1.2"
+  }
 }
