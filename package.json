@@ -1,0 +1,19 @@
+{
+  "name": "HTTPServer",
+  "version": "1.0.0",
+  "description": "HTTPServer ==========",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pedroassis/HTTPServer.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pedroassis/HTTPServer/issues"
+  },
+  "homepage": "https://github.com/pedroassis/HTTPServer"
+}
