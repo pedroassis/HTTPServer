@@ -27,7 +27,7 @@ function ExpressAdapter(){
 	};
 
 	this.addStaticFolder = function(folder){
-		server.use(express.static(folder));
+		server.use(express.static(folder, { maxAge: 31622400000 }));
 	};
 
 	this.listen = server.listen.bind(server);
