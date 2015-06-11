@@ -57,10 +57,10 @@ function ExpressAdapter(){
 		    	var promise;
 
 		    	if(listener.length <= 1){
-		    		promise = listener(request.params ? request.params.param : undefined);
+		    		promise = listener(request.params ? request.params.param : undefined, request);
 		    	} else {
 		    		var deferred = Q.defer();
-		    		listener(deferred);
+		    		listener(deferred, request);
 		    		promise = deferred.promise;
 		    	}
 
